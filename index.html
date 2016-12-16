@@ -9,8 +9,11 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
     <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet">
+
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
     <!-- Place this tag in your head or just before your close body tag. -->
-<script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
   </head>
   <body>
     <!--<div id="logo">
@@ -86,7 +89,7 @@ Show your love adding one star more or spreading the word.
 The AST is a structure representing your Java code in a way that it is easy to process:
 </p>
 
-<div class="highlight highlight-text-java"><pre>
+<div class="highlight highlight-text-java"><pre class="prettyprint lang-java">
 CompilationUnit compilationUnit = JavaParser.parse("class A { }");
 ClassOrInterfaceDeclaration classA = compilationUnit.getClassByName("A");
 </pre></div>
@@ -97,7 +100,7 @@ ClassOrInterfaceDeclaration classA = compilationUnit.getClassByName("A");
 <p>Suppose you want to look for fields which are public and not static.
 This is pretty easy using JavaParser:</p>
 
-<div class="highlight highlight-text-java"><pre>
+<div class="highlight highlight-text-java"><pre class="prettyprint lang-java">
 compilationUnit.getNodesByType(FieldDeclaration.class).stream().
         filter(f -> f.getModifiers().contains(PUBLIC) && 
                 !f.getModifiers().contains(STATIC)).
@@ -109,7 +112,7 @@ compilationUnit.getNodesByType(FieldDeclaration.class).stream().
 
 <p>Maybe you want to ensure all abstract classes have a name starting with <i>Abstract</i>:</p>
 
-<div class="highlight highlight-text-java"><pre>
+<div class="highlight highlight-text-java"><pre class="prettyprint lang-java">
 compilationUnit.getNodesByType(ClassOrInterfaceDeclaration.class).stream().
         filter(c -> !c.isInterface()
                 && c.getModifiers().contains(ABSTRACT)
@@ -125,7 +128,7 @@ compilationUnit.getNodesByType(ClassOrInterfaceDeclaration.class).stream().
 <a name="generate"></a>
 <h3 class="subarea-title">Generate Java code</h3>
 
-<div class="highlight highlight-text-java"><pre>
+<div class="highlight highlight-text-java"><pre class="prettyprint lang-java">
 ClassOrInterfaceDeclaration myClass = new ClassOrInterfaceDeclaration(
         EnumSet.of(PUBLIC), false, "MyClass");
 myClass.addField("int", "A CONSTANT", PUBLIC, STATIC);
