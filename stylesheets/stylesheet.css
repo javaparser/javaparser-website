@@ -79,7 +79,7 @@ a {
 
 @media screen and (min-width: 64em) {
   .project-name {
-    font-size: 3.25rem; } }
+    font-size: 4rem; } }
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
   .project-name {
@@ -266,7 +266,7 @@ img.logo {
 }
 
 .page-header {
-  background-image: url("../images/logo.png"), linear-gradient(120deg, #34302F, #000000);
+  background-image: linear-gradient(120deg, #34302F, #000000);
   background-repeat:   no-repeat;
   background-position: 50% 5%;
   background-image-size: 150px 150px;
@@ -285,6 +285,49 @@ img.logo {
 }
 
 h1.project-name {
-  margin-top:140px;
   display: block;
+  letter-spacing: 3px;
+}
+
+
+.project-tagline {
+  font-size: 1.5rem;
+}
+.area-title {
+  /*padding-left:50px;*/
+  /*background-image: url("../images/logo.png");
+  background-size: contain;  
+  background-repeat:   no-repeat;*/
+}
+
+body {
+     /* The background image */
+    background-image: url("../images/logo.png");
+    /* Set a specified height, or the minimum height for the background image */
+    min-height: 500px;
+    /* Set background image to fixed (don't scroll along with the page) */
+    background-attachment: fixed;
+    /* Center the background image */
+    background-position: 5% 5%;
+    /* Set the background image to no repeat */
+    background-repeat: no-repeat;
+    /* Scale the background image to be as large as possible */
+    background-size: 100px;
+}
+
+.github-bar {
+  border-top: 1px #eee solid;
+  border-bottom: 1px #eee solid;
+  background-color: #f5f5f5;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.github-bar span {
+  display: inline-block;
+}
+
+.github-block {
+  display: inline-block;
+  text-align: center;
 }
