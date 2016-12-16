@@ -13,15 +13,25 @@
 <script async defer src="https://buttons.github.io/buttons.js"></script>
   </head>
   <body>
+    <!--<div id="logo">
+    </div>-->
     <section class="page-header" >      
       <h1 class="project-name title-font">JavaParser</h1>
       <h2 class="project-tagline">Process Java code programmatically</h2>
     </section>
 
+    <section class="navigation">
+      <ul>
+        <li class="selected"><a href="index.html">What is JavaParser?</a></li>
+        <li><a href="gettingstarted.html">Getting started</a>
+        <li class="last"><a href="about.html">About this project</a>
+      </ul>
+    </section>      
+
     <section class="main-content">
 
 <p>
-Our philosophy is to build a set of tools <b>simple</b> and <b>lightweight</b>
+Our goal is to build a <b>simple</b> and <b>lightweight</b> set of tools
 under a business friendly <a href="#license">license</a>.
 </p>
 
@@ -34,7 +44,26 @@ Show your love adding one star more or spreading the word.
   <!-- Place this tag where you want the button to render. -->
 <a class="github-button" href="https://github.com/javaparser/javaparser" data-style="mega" data-count-href="/javaparser/javaparser/stargazers" data-count-api="/repos/javaparser/javaparser#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star javaparser/javaparser on GitHub">Star JavaParser</a>
 
-<iframe src="https://ghbtns.com/github-btn.html?user=javaparser&repo=javaparser&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+<a class="github-button" href="https://github.com/javaparser/javasymbolsolver" data-style="mega" data-count-href="/javaparser/javasymbolsolver/stargazers" data-count-api="/repos/javaparser/javasymbolsolver#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star javaparser/javasymbolsolver on GitHub">Star JavaSymbolSolver</a>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-text="I am using #javaparser a set of open-source tools to work with Java code" data-url="http://javaparser.org" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<script>window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return t;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
+
+  return t;
+}(document, "script", "twitter-wjs"));</script>
 
 </center>
 
@@ -53,47 +82,72 @@ Show your love adding one star more or spreading the word.
 <a name="parse"></a>
 <h3 class="subarea-title">Parsing Java code</h3>
 
+<p>Using JavaParser you can get an Abstract Syntax Tree (AST) from Java code.
+The AST is a structure representing your Java code in a way that it is easy to process:
+</p>
+
+<div class="highlight highlight-text-java"><pre>
+CompilationUnit compilationUnit = JavaParser.parse("class A { }");
+ClassOrInterfaceDeclaration classA = compilationUnit.getClassByName("A");
+</pre></div>
+
 <a name="analyze"></a>
 <h3 class="subarea-title">Analyze Java code</h3>
+
+<p>Suppose you want to look for fields which are public and not static.
+This is pretty easy using JavaParser:</p>
+
+<div class="highlight highlight-text-java"><pre>
+compilationUnit.getNodesByType(FieldDeclaration.class).stream().
+        filter(f -> f.getModifiers().contains(PUBLIC) && 
+                !f.getModifiers().contains(STATIC)).
+        forEach(f -> System.out.println("Check field at line " + f.getBegin().get().line));
+</pre></div>                        
 
 <a name="transform"></a>
 <h3 class="subarea-title">Transform Java code</h3>
 
+<p>Maybe you want to ensure all abstract classes have a name starting with <i>Abstract</i>:</p>
+
+<div class="highlight highlight-text-java"><pre>
+compilationUnit.getNodesByType(ClassOrInterfaceDeclaration.class).stream().
+        filter(c -> !c.isInterface()
+                && c.getModifiers().contains(ABSTRACT)
+                && !c.getName().getId().startsWith("Abstract")).
+        forEach(c -> {
+            String oldName = c.getName().getIdentifier();
+            String newName = "Abstract" + oldName;
+            System.out.println("Renaming class " + oldName + " into " + newName);
+            c.getName().setIdentifier(newName);
+        });
+</pre></div>
+
 <a name="generate"></a>
 <h3 class="subarea-title">Generate Java code</h3>
 
+<div class="highlight highlight-text-java"><pre>
+ClassOrInterfaceDeclaration myClass = new ClassOrInterfaceDeclaration(
+        EnumSet.of(PUBLIC), false, "MyClass");
+myClass.addField("int", "A CONSTANT", PUBLIC, STATIC);
+myClass.addField("String", "name", PRIVATE);
+String code = myClass.toString();
+</pre></div>        
+
 <h2 class="area-title">Components of JavaParser</h2>
 
-<h2 class="area-title">How do I get it?</h2>
+JavaParser is both the name of the set of tools and of the main component: the parser.
 
-<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
-    &lt;<span class="pl-ent">groupId</span>&gt;com.github.javaparser&lt;/<span class="pl-ent">groupId</span>&gt;
-    &lt;<span class="pl-ent">artifactId</span>&gt;javaparser-core&lt;/<span class="pl-ent">artifactId</span>&gt;
-    &lt;<span class="pl-ent">version</span>&gt;2.5.1&lt;/<span class="pl-ent">version</span>&gt;
-&lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
+In addition to JavaParser there is another component in the set of tools: <a href="https://github.com/javaparser/javasymbolsolver">JavaSymbolSolver</a>.
 
-<p> GRADLE </p>
+<p>The parser is extra lightweight (no dependencies at all!) and can give you super fast an AST for your Java code. Sometimes an AST is not enough because you want:</p>
+<br>
+<ul>
+<li>Understand to which element a certain name refer: a field? A variable?
+<li>You need to know the type of a complex expression
+<li>You want to get a list of all the interfaces implemented (also indirectly) by a certain class
+</ul>
 
-<h2>
-<a id="manual" class="anchor" href="#manual" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
-
-Manual and JavaDoc
-
-<p>Examples of how to use the library can be found on the <a href="https://github.com/javaparser/javaparser/wiki/Manual">Manual</a> page of the wiki</p>
-
-<h2>
-<a id="troubleshooting" class="anchor" href="#troubleshooting" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>I need help</h2>
-
-<p>First try the <a href="https://github.com/javaparser/javaparser/wiki">wiki</a>.</p>
-
-<p>Didn't find an answer? Try <a href="https://github.com/javaparser/javaparser/issues?utf8=%E2%9C%93&amp;q=is%3Aissue%20">searching for existing issues</a></p>
-
-<p>Still nothing? <a href="https://github.com/javaparser/javaparser/issues/new">Open an issue</a> or <a href="https://gitter.im/javaparser/javaparser">come chat on Gitter</a></p>
-
-<h2>
-<a id="javadoc" class="anchor" href="#javadoc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Javadoc</h2>
-
-<p>The libraries javadoc can be found <a href="http://www.javadoc.io/doc/com.github.javaparser/javaparser-core/">here</a></p>
+JavaSymbolSolver does the extra work to answer this questions for you. 
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
@@ -105,23 +159,22 @@ Manual and JavaDoc
 <p>For details about the Apache License please refer to LICENSE.APACHE.</p>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/javaparser/javaparser">JavaParser</a> is maintained by <a href="https://github.com/javaparser">javaparser</a>.</span>
+        <span class=""><a href="https://github.com/javaparser">JavaParser</a> is maintained by Open-Source enthusiasts.</span>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
 
     </section>
 
-            <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-41747754-5");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-89097232-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
   </body>
 </html>

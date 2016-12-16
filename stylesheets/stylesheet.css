@@ -300,11 +300,9 @@ h1.project-name {
   background-repeat:   no-repeat;*/
 }
 
-body {
+#logo {
      /* The background image */
     background-image: url("../images/logo.png");
-    /* Set a specified height, or the minimum height for the background image */
-    min-height: 500px;
     /* Set background image to fixed (don't scroll along with the page) */
     background-attachment: fixed;
     /* Center the background image */
@@ -313,6 +311,15 @@ body {
     background-repeat: no-repeat;
     /* Scale the background image to be as large as possible */
     background-size: 100px;
+
+    position: absolute;
+    top:20px;
+    left:20px;
+}
+
+body {
+    /* Set a specified height, or the minimum height for the background image */
+    min-height: 500px;
 }
 
 .github-bar {
@@ -330,4 +337,28 @@ body {
 .github-block {
   display: inline-block;
   text-align: center;
+}
+
+.navigation {
+    background-color: #eee;
+    margin: 0;
+    padding: 5px;
+    border-bottom: 1px #ddd solid;
+}
+
+.navigation ul {
+  margin:0;
+  list-style: none;
+  text-align: center;
+}
+.navigation li {
+    display: inline-block;
+    margin: 0px 10px 0 10px;
+    /* background-color: #ccc; */
+    padding: 0 10px 0 0;
+    border-right: 2px #ddd solid;
+}
+
+.navigation li.last {
+  border-right: 0px #ddd solid;
 }
