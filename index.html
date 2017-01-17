@@ -133,7 +133,7 @@ compilationUnit.getNodesByType(ClassOrInterfaceDeclaration.class).stream().
 <div class="highlight highlight-text-java"><pre class="prettyprint lang-java">
 ClassOrInterfaceDeclaration myClass = new ClassOrInterfaceDeclaration(
         EnumSet.of(PUBLIC), false, "MyClass");
-myClass.addField("int", "A CONSTANT", PUBLIC, STATIC);
+myClass.addField("int", "A_CONSTANT", PUBLIC, STATIC);
 myClass.addField("String", "name", PRIVATE);
 String code = myClass.toString();
 </pre></div>        
