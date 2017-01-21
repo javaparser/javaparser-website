@@ -362,3 +362,19 @@ body {
 .navigation li.last {
   border-right: 0px #ddd solid;
 }
+
+.box {
+    padding: 0.8rem;
+    overflow: auto;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    border-radius: 1.3rem;
+    border-color: #9c98b6;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.box img {
+  float:left;
+  font-size: 1.1rem;
+}
