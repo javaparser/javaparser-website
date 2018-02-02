@@ -112,7 +112,7 @@ The AST is a structure representing your Java code in a way that it is easy to p
 
 <div class="highlight highlight-text-java"><pre class="prettyprint lang-java">
 CompilationUnit compilationUnit = JavaParser.parse("class A { }");
-ClassOrInterfaceDeclaration classA = compilationUnit.getClassByName("A");
+Optional&lt;ClassOrInterfaceDeclaration> classA = compilationUnit.getClassByName("A");
 </pre></div>
 
 <a name="analyze"></a>
@@ -122,11 +122,11 @@ ClassOrInterfaceDeclaration classA = compilationUnit.getClassByName("A");
 This is pretty easy using JavaParser:</p>
 
 <div class="highlight highlight-text-java"><pre class="prettyprint lang-java">
-compilationUnit.getNodesByType(FieldDeclaration.class).stream().
-        filter(f -> f.getModifiers().contains(PUBLIC) && 
-                !f.getModifiers().contains(STATIC)).
-        forEach(f -> System.out.println("Check field at line " + f.getBegin().get().line));
-</pre></div>                        
+compilationUnit.findAll(FieldDeclaration.class).stream()
+        .filter(f -> f.isPublic() && !f.isStatic())
+        .forEach(f -> System.out.println("Check field at line " +
+            f.getRange().map(r -> r.begin.line).orElse(-1)));
+</pre></div>
 
 <a name="transform"></a>
 <h3 class="subarea-title">Transform Java code</h3>
@@ -134,15 +134,15 @@ compilationUnit.getNodesByType(FieldDeclaration.class).stream().
 <p>Maybe you want to ensure all abstract classes have a name starting with <i>Abstract</i>:</p>
 
 <div class="highlight highlight-text-java"><pre class="prettyprint lang-java">
-compilationUnit.getNodesByType(ClassOrInterfaceDeclaration.class).stream().
-        filter(c -> !c.isInterface()
-                && c.getModifiers().contains(ABSTRACT)
-                && !c.getName().getId().startsWith("Abstract")).
-        forEach(c -> {
-            String oldName = c.getName().getIdentifier();
+compilationUnit.findAll(ClassOrInterfaceDeclaration.class).stream()
+        .filter(c -> !c.isInterface()
+                && c.isAbstract()
+                && !c.getNameAsString().startsWith("Abstract"))
+        .forEach(c -> {
+            String oldName = c.getNameAsString();
             String newName = "Abstract" + oldName;
             System.out.println("Renaming class " + oldName + " into " + newName);
-            c.getName().setIdentifier(newName);
+            c.setName(newName);
         });
 </pre></div>
 
@@ -150,10 +150,12 @@ compilationUnit.getNodesByType(ClassOrInterfaceDeclaration.class).stream().
 <h3 class="subarea-title">Generate Java code</h3>
 
 <div class="highlight highlight-text-java"><pre class="prettyprint lang-java">
-ClassOrInterfaceDeclaration myClass = new ClassOrInterfaceDeclaration(
-        EnumSet.of(PUBLIC), false, "MyClass");
-myClass.addField("int", "A_CONSTANT", PUBLIC, STATIC);
-myClass.addField("String", "name", PRIVATE);
+CompilationUnit compilationUnit = new CompilationUnit();
+ClassOrInterfaceDeclaration myClass = compilationUnit
+        .addClass("MyClass")
+        .setPublic(true);
+myClass.addField(int.class, "A_CONSTANT", PUBLIC, STATIC);
+myClass.addField(String.class, "name", PRIVATE);
 String code = myClass.toString();
 </pre></div>        
 
